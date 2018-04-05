@@ -11,14 +11,16 @@ import CoreData
 
 class NoteListViewController: UITableViewController {
 
-    var notes = [Note]()
+    //var notes = [Note]()
     var notesArray = [[Note]]()
+    var sectionsName = [String]()
     var defaultNotebook: NoteBook?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.notes = DataManager.sharedManager.fetchNotes()
-        self.tableView.reloadData()
+        fetchSections()
+        //self.notes = DataManager.sharedManager.fetchNotes()
+        //self.tableView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -35,7 +37,7 @@ class NoteListViewController: UITableViewController {
         fastAdd.tintColor = UIColor.emerald
         self.setToolbarItems([operationsNotebook, flexible, fastAdd], animated: false)
         
-        //fetchHeaders()
+        fetchSections()
     }
     
     @objc func handleAddNote() {
@@ -46,20 +48,13 @@ class NoteListViewController: UITableViewController {
         notebooks.forEach { (notebook) in
             alertController.addAction(UIAlertAction(title: notebook.name, style: .default) { (action) in
                 _ = DataManager.sharedManager.createNote(notebook: notebook)
-                self.notes = DataManager.sharedManager.fetchNotes()
-                self.tableView.reloadData()
+                //self.notes = DataManager.sharedManager.fetchNotes()
+                self.fetchSections()
             })
         }
         let cancel = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         alertController.addAction(cancel)
         present(alertController, animated: true, completion: nil)
-       /*let notebook = DataManager.sharedManager.createNotebook(name: "Default Notebook")
-        if let notebook = notebook {
-            _ = DataManager.sharedManager.createNote(notebook: notebook)
-            let notes = DataManager.sharedManager.fetchNotes()
-            self.notes = notes
-            self.tableView.reloadData()
-        }*/
     }
     
     @objc func handleNotebooks() {
@@ -70,11 +65,11 @@ class NoteListViewController: UITableViewController {
     
     @objc func handleAddStickyNote() {
         if let defaultNotebook = defaultNotebook {
-            let note = DataManager.sharedManager.createNote(notebook: defaultNotebook)
-            if let note = note.0 {
-                notes.append(note)
-                self.tableView.reloadData()
-            }
+            let _ = DataManager.sharedManager.createNote(notebook: defaultNotebook)
+            //if let note = note.0 {
+                //notes.append(note)
+                fetchSections()
+            //}
         }
     }
     

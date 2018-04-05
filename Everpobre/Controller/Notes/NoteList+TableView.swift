@@ -8,13 +8,28 @@
 
 import UIKit
 
+class IndentLabel: UILabel {
+    
+    override func drawText(in rect: CGRect) {
+        let insets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        let customRect = UIEdgeInsetsInsetRect(rect, insets)
+        super.drawText(in: customRect)
+    }
+    
+}
+
 extension NoteListViewController {
     
-    /*override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let label = UILabel()
-        label.text = "Test"
-        label.backgroundColor = .gray
-        label.textColor = UIColor.blueMidNight
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = IndentLabel()
+        label.text = sectionsName[section]
+        label.backgroundColor = UIColor.blueMidNight
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }
     
@@ -25,19 +40,26 @@ extension NoteListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.notesArray[section].count
     }
-    
-    func fetchHeaders() {
+ 
+    func fetchSections() {
+        var arrayOfNotes = [[Note]]()
+        var names = [String]()
         let notebooks = DataManager.sharedManager.fetchNotebooks()
         notebooks.forEach { (notebook) in
+            names.append(notebook.name!)
             if let notes = notebook.notes {
-                self.notesArray.append((notes.allObjects as? [Note])!)
+               arrayOfNotes.append((notes.allObjects as? [Note])!)
+              
             }
         }
-    }*/
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
+        self.sectionsName = names
+        self.notesArray = arrayOfNotes
+        self.tableView.reloadData()
     }
+    
+    /*override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return notes.count
+    }*/
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let moveAction = UITableViewRowAction(style: .default, title: "Move", handler: moveToAnotherNotebook)
@@ -54,10 +76,12 @@ extension NoteListViewController {
         notebooks.forEach { (notebook) in
             alertController.addAction(UIAlertAction(title: notebook.name, style: .default) { (action) in
                 let context = DataManager.sharedManager.persistentContainer.viewContext
-                let note = self.notes[indexPath.row]
+                //let note = self.notes[indexPath.row]
+                let note = self.notesArray[indexPath.section][indexPath.row]
                 note.notebook = notebook
                 do {
                     try context.save()
+                    self.fetchSections()
                 } catch let saveErr {
                     print("Failed to edit note:", saveErr)
                 }
@@ -70,10 +94,11 @@ extension NoteListViewController {
     
     private func handleDeleteNote(action: UITableViewRowAction, indexPath: IndexPath) {
         print("Deleting note...")
-//        let note = self.notesArray[indexPath.section][indexPath.row]
-//        self.notesArray.remove(at: [indexPath.section][indexPath.row])
-        let note = self.notes[indexPath.row]
-        self.notes.remove(at: indexPath.row)
+        let note = self.notesArray[indexPath.section][indexPath.row]
+        self.notesArray[indexPath.section].remove(at: indexPath.row)
+        //  self.notesArray.remove(at: [indexPath.section][indexPath.row])
+//        let note = self.notes[indexPath.row]
+//        self.notes.remove(at: indexPath.row)
         self.tableView.deleteRows(at: [indexPath], with: .automatic)
         
         //delete from CoreData
@@ -91,8 +116,8 @@ extension NoteListViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId)
             ?? UITableViewCell(style: .default, reuseIdentifier: cellId)
 
-        let note = notes[indexPath.row]
-        //let note = self.notesArray[indexPath.section][indexPath.row]
+        //let note = notes[indexPath.row]
+        let note = self.notesArray[indexPath.section][indexPath.row]
         
         if let name = note.title, let date = note.creationDate {
             let dateFormatter = DateFormatter()
@@ -111,7 +136,8 @@ extension NoteListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let noteDetailVC = NoteController()
-        noteDetailVC.note = notes[indexPath.row]
+        //noteDetailVC.note = notes[indexPath.row]
+        noteDetailVC.note = self.notesArray[indexPath.section][indexPath.row]
         noteDetailVC.delegate = self
         navigationController?.pushViewController(noteDetailVC, animated: true)
     }
