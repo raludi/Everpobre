@@ -93,7 +93,8 @@ extension NoteListViewController {
 extension NoteListViewController: NoteControllerDelegate {
     
     func didEditNote() {
-        self.tableView.reloadData()
+        self.fetchSections()
+        //self.tableView.reloadData()
     }
 
 }

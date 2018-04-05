@@ -78,6 +78,7 @@
 		05042433206BBD4C00BDF281 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				05EBA03A2076A22B00502486 /* Note */,
 				05F174262070FCCD00D4DFFA /* Notebooks */,
 				05F174252070FCC600D4DFFA /* Notes */,
 			);
@@ -155,6 +156,15 @@
 			path = Everpobre;
 			sourceTree = "<group>";
 		};
+		05EBA03A2076A22B00502486 /* Note */ = {
+			isa = PBXGroup;
+			children = (
+				05042434206BBD7700BDF281 /* NoteController.swift */,
+				05042435206BBD7700BDF281 /* NoteController.xib */,
+			);
+			path = Note;
+			sourceTree = "<group>";
+		};
 		05F174142070EB6B00D4DFFA /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,8 +183,6 @@
 			children = (
 				05CBAB192062FE6000317A84 /* NoteListViewController.swift */,
 				0505422B2070DA4800542646 /* NoteList+TableView.swift */,
-				05042434206BBD7700BDF281 /* NoteController.swift */,
-				05042435206BBD7700BDF281 /* NoteController.xib */,
 			);
 			path = Notes;
 			sourceTree = "<group>";
