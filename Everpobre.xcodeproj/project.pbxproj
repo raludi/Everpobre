@@ -15,6 +15,8 @@
 		053EA04F20572F3500A9D6DB /* NoteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053EA04E20572F3500A9D6DB /* NoteTableViewController.swift */; };
 		0557B7A3205D2B78001CD3D7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0557B7A2205D2B78001CD3D7 /* Extensions.swift */; };
 		0557B7A5205D2CFF001CD3D7 /* NoteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0557B7A4205D2CFF001CD3D7 /* NoteDetailViewController.swift */; };
+		056C49CB2077C9FF0044F311 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056C49C92077C9FF0044F311 /* MapViewController.swift */; };
+		056C49CC2077C9FF0044F311 /* MapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056C49CA2077C9FF0044F311 /* MapViewController.xib */; };
 		0584DCB3205871E400338503 /* ManagedObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0584DCB2205871E400338503 /* ManagedObjects.swift */; };
 		05A1B33E2051CEA700AA1AB1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A1B33D2051CEA700AA1AB1 /* AppDelegate.swift */; };
 		05A1B3452051CEA700AA1AB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A1B3442051CEA700AA1AB1 /* Assets.xcassets */; };
@@ -43,6 +45,8 @@
 		053EA04E20572F3500A9D6DB /* NoteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTableViewController.swift; sourceTree = "<group>"; };
 		0557B7A2205D2B78001CD3D7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0557B7A4205D2CFF001CD3D7 /* NoteDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailViewController.swift; sourceTree = "<group>"; };
+		056C49C92077C9FF0044F311 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		056C49CA2077C9FF0044F311 /* MapViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapViewController.xib; sourceTree = "<group>"; };
 		0584DCB2205871E400338503 /* ManagedObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjects.swift; sourceTree = "<group>"; };
 		05A1B33A2051CEA700AA1AB1 /* Everpobre.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Everpobre.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05A1B33D2051CEA700AA1AB1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +85,8 @@
 				05EBA03A2076A22B00502486 /* Note */,
 				05F174262070FCCD00D4DFFA /* Notebooks */,
 				05F174252070FCC600D4DFFA /* Notes */,
+				056C49C92077C9FF0044F311 /* MapViewController.swift */,
+				056C49CA2077C9FF0044F311 /* MapViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -258,6 +264,7 @@
 				05A1B3502051CF2A00AA1AB1 /* Launch Screen.storyboard in Resources */,
 				05042437206BBD7700BDF281 /* NoteController.xib in Resources */,
 				05A1B3542051CF8F00AA1AB1 /* NoteViewController.xib in Resources */,
+				056C49CC2077C9FF0044F311 /* MapViewController.xib in Resources */,
 				05A1B3452051CEA700AA1AB1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,6 +285,7 @@
 				05CBAB1C206309CC00317A84 /* UIColor+extensions.swift in Sources */,
 				05F3CCE62055DF6B000BDE06 /* NoteViewByCodeGestures2Controller.swift in Sources */,
 				05F1741F2070EB7B00D4DFFA /* NoteBook+CoreDataClass.swift in Sources */,
+				056C49CB2077C9FF0044F311 /* MapViewController.swift in Sources */,
 				0557B7A5205D2CFF001CD3D7 /* NoteDetailViewController.swift in Sources */,
 				050542312070EA7900542646 /* EverpobreModel.xcdatamodeld in Sources */,
 				05F1741B2070EB7B00D4DFFA /* PhotoContainer+CoreDataClass.swift in Sources */,

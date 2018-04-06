@@ -82,6 +82,8 @@ extension NoteController {
         //Este espacio es para dejar entre los botones unicamente
         let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)//mirar más
         let mapBarButton = UIBarButtonItem(title: "Map", style: .done, target: self, action: #selector(addLocation))
+        photoBarButton.tintColor = UIColor.emerald
+        mapBarButton.tintColor = UIColor.emerald
         self.setToolbarItems([photoBarButton, flexible, mapBarButton], animated: false)
     }
     
@@ -126,13 +128,13 @@ extension NoteController {
         default:
             break
         }
-        
     }
-    
     
     func closeKeyboard() {
         if titleTextField.isFirstResponder {
             titleTextField.resignFirstResponder()
+        } else if bodyText.isFirstResponder {
+            bodyText.resignFirstResponder()
         }
     }
     
@@ -176,5 +178,7 @@ extension NoteController: UIImagePickerControllerDelegate, UINavigationControlle
 extension NoteController {
     @objc func addLocation() {
         print("Add location...")
+        let mapController = MapViewController()
+        present(mapController.wrappedNavigation(), animated: true, completion: nil)
     }
 }
