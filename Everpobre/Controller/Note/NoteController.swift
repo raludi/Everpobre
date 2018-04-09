@@ -12,7 +12,7 @@ protocol NoteControllerDelegate {
     func didEditNote()
 }
 
-class NoteController: UIViewController {
+class NoteController: UIViewController, UIGestureRecognizerDelegate {
     
     // MARK: - Outlets
     @IBOutlet weak var titleTextField: UITextField!
@@ -101,18 +101,37 @@ extension NoteController {
         leftImgConstraint = imageView.leftAnchor.constraint(equalTo: bodyText.leftAnchor, constant: 20)
         leftImgConstraint.isActive = true
         imageView.image = image
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(moveImageWhereYouWant))
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didMoved))
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(didPinch))
+        pinchGesture.delegate = self
+        let rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(didRotateImage))
         imageView.addGestureRecognizer(longPressGesture)
+        imageView.addGestureRecognizer(pinchGesture)
+        imageView.addGestureRecognizer(rotateGesture)
+        
+    }
+    @objc func didPinch(pinchGesture: UIPinchGestureRecognizer) {
+        let scale = pinchGesture.scale
+        let imageView = pinchGesture.view as! UIImageView
+        imageView.transform = imageView.transform.scaledBy(x: scale, y: scale)
+        pinchGesture.scale = 1
     }
     
-    @objc func moveImageWhereYouWant(longPressGesture: UILongPressGestureRecognizer) {
+    @objc func didRotateImage(rotationGesture: UIRotationGestureRecognizer) {
+        let rotation = rotationGesture.rotation
+        let imageView = rotationGesture.view as! UIImageView
+        imageView.transform =  imageView.transform.rotated(by: rotation)
+        rotationGesture.rotation = 0
+    }
+    
+    @objc func didMoved(longPressGesture: UILongPressGestureRecognizer) {
         let imageView =  longPressGesture.view as! UIImageView
         switch longPressGesture.state {
         case .began:
             closeKeyboard()
             relativePoint = longPressGesture.location(in: imageView)
             UIView.animate(withDuration: 0.2, animations: {
-                imageView.transform = CGAffineTransform.init(scaleX: 1.2, y: 1.2)
+                //imageView.transform = CGAffineTransform.init(scaleX: 1.2, y: 1.2)
             })
             break
         case .changed:
@@ -122,7 +141,7 @@ extension NoteController {
             break
         case .ended, .cancelled:
             UIView.animate(withDuration: 0.2, animations: {
-                imageView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+               // imageView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
             })
             break
         default:
@@ -136,6 +155,10 @@ extension NoteController {
         } else if bodyText.isFirstResponder {
             bodyText.resignFirstResponder()
         }
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
     
 }
@@ -174,6 +197,7 @@ extension NoteController: UIImagePickerControllerDelegate, UINavigationControlle
     
     
 }
+
 
 extension NoteController {
     @objc func addLocation() {
