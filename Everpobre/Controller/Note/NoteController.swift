@@ -102,9 +102,11 @@ extension NoteController {
         leftImgConstraint.isActive = true
         imageView.image = image
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didMoved))
+        longPressGesture.delegate = self
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(didPinch))
         pinchGesture.delegate = self
         let rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(didRotateImage))
+        rotateGesture.delegate = self
         imageView.addGestureRecognizer(longPressGesture)
         imageView.addGestureRecognizer(pinchGesture)
         imageView.addGestureRecognizer(rotateGesture)
@@ -156,10 +158,11 @@ extension NoteController {
             bodyText.resignFirstResponder()
         }
     }
-    
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+       //MARK:- UIGestureRecognizerDelegate Methods
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
+   
     
 }
 
