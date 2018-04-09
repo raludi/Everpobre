@@ -18,11 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let noteListTVC = NoteTableViewController(style: .plain).wrappedNavigation()
         let noteDetailVC = NoteDetailViewController().wrappedNavigation()
-        //NoteViewByCodeGestures2Controller()
-        //NoteViewByCodeAnimationsController()
-        //NoteViewByCodeWithGesturesController()
-        //NoteViewController()
-    
         let splitVC = UISplitViewController()
         splitVC.viewControllers = [noteListTVC, noteDetailVC]
         //window?.rootViewController = UINavigationController(rootViewController: NoteController())

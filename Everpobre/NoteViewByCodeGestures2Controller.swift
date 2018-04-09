@@ -142,7 +142,6 @@ class NoteViewByCodeGestures2Controller: UIViewController, UIImagePickerControll
             default:
                 break
         }
-
     }
     
     @objc func closeKeyboard() {
