@@ -11,16 +11,16 @@ import CoreData
 
 class NoteListViewController: UITableViewController {
 
-    //var notes = [Note]()
-    var notesArray = [[Note]]()
-    var sectionsName = [String]()
+    var fetchedResultController: NSFetchedResultsController<NoteBook>!
+    
+    var notebooks = [NoteBook]()
+    //var notesArray = [[Note]]()
+    //var sectionsName = [String]()
     var defaultNotebook: NoteBook?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchSections()
-        //self.notes = DataManager.sharedManager.fetchNotes()
-        //self.tableView.reloadData()
+        self.notebooks = fetchedResultController.fetchedObjects!
     }
     
     override func viewDidLoad() {
@@ -36,20 +36,26 @@ class NoteListViewController: UITableViewController {
         operationsNotebook.tintColor = UIColor.emerald
         fastAdd.tintColor = UIColor.emerald
         self.setToolbarItems([operationsNotebook, flexible, fastAdd], animated: false)
-        
-        fetchSections()
+        setupFetchController()
+    }
+    
+    private func setupFetchController() {
+        let context = DataManager.sharedManager.persistentContainer.viewContext
+        let request: NSFetchRequest<NoteBook> = NoteBook.fetchRequest()
+        request.sortDescriptors = [
+            NSSortDescriptor(key: "name", ascending: true)
+        ]
+        fetchedResultController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultController.delegate = self
+        try! fetchedResultController.performFetch()
     }
     
     @objc func handleAddNote() {
         print("Added new note...")
         let alertController = UIAlertController(title: "Choose Notebook", message: nil, preferredStyle: .actionSheet)
-
-        let notebooks = DataManager.sharedManager.fetchNotebooks()
-        notebooks.forEach { (notebook) in
+        self.notebooks.forEach { (notebook) in
             alertController.addAction(UIAlertAction(title: notebook.name, style: .default) { (action) in
                 _ = DataManager.sharedManager.createNote(notebook: notebook)
-                //self.notes = DataManager.sharedManager.fetchNotes()
-                self.fetchSections()
             })
         }
         let cancel = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
@@ -66,10 +72,6 @@ class NoteListViewController: UITableViewController {
     @objc func handleAddStickyNote() {
         if let defaultNotebook = defaultNotebook {
             let _ = DataManager.sharedManager.createNote(notebook: defaultNotebook)
-            //if let note = note.0 {
-                //notes.append(note)
-                fetchSections()
-            //}
         }
     }
     
@@ -86,15 +88,13 @@ extension NoteListViewController {
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.blueMidNight, NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 24)]
     }
-
 }
 
  // MARK: - NoteDetailDelegate
 extension NoteListViewController: NoteControllerDelegate {
     
     func didEditNote() {
-        self.fetchSections()
-        //self.tableView.reloadData()
+        //self.fetchSections()
     }
 
 }
@@ -106,4 +106,14 @@ extension NoteListViewController: NotebookListDelegate {
         defaultNotebook = notebook
     }
     
+}
+
+extension NoteListViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        let notebooks = controller.fetchedObjects as! [NoteBook]?
+        if let notebooks = notebooks {
+            self.notebooks = notebooks
+        }
+        self.tableView.reloadData()
+    }
 }

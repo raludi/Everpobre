@@ -16,15 +16,17 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
     
     // MARK: - Outlets
     @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var modificationDate: UILabel!
     @IBOutlet weak var creationDate: UILabel!
     @IBOutlet weak var bodyText: UITextView!
     @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var topBodyConstraint: NSLayoutConstraint!
     
     // MARK: - Properties
     var note: Note?
     var delegate: NoteControllerDelegate?
-    
+    var count = 0
     var topImgConstraint: NSLayoutConstraint!
     var leftImgConstraint: NSLayoutConstraint!
     var relativePoint: CGPoint!
@@ -42,47 +44,34 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
         dateFormatter.dateFormat = "dd/MM/yyyy"
         creationDate.text = dateFormatter.string(from: (note?.creationDate)!)
         modificationDate.text = dateFormatter.string(from: (note?.modificationDate)!)
-        setupDate()
         bodyText.text = note?.body
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleUpdateNote))
-        
+        setupDatePicker()
         setupBottomToolbar()
         
     }
 
     @objc private func handleUpdateNote() {
         print("Updating note...")
-    }
-
-    private func setupDate() {
-        modificationDate.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didDatePickerShowed))
-        modificationDate.addGestureRecognizer(tapGesture)
-        datePicker.isUserInteractionEnabled = true
-        datePicker.datePickerMode = .date
-        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(didCloseDatePicker))
-        swipeGesture.direction = .down
-        view.addGestureRecognizer(swipeGesture)
-    }
-    
-    @objc func didDatePickerShowed() {
-        datePicker.isHidden = false
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yyyy"
-        datePicker.date = dateFormatter.date(from: modificationDate.text!)!
-        datePicker.addTarget(self, action: #selector(didDateChanged), for: UIControlEvents.valueChanged)
-        
-    }
-    
-    @objc func didDateChanged() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yyyy"
-        modificationDate.text = dateFormatter.string(from: datePicker.date)
-    }
-    
-    @objc func didCloseDatePicker() {
-        datePicker.isHidden = true
+        DataManager.sharedManager.persistentContainer.performBackgroundTask { (backgroundContext) in
+                let note = self.note
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "dd/MM/yyyy"
+            DispatchQueue.main.async {
+                note?.body = self.bodyText.text
+                note?.creationDate = dateFormatter.date(from: self.creationDate.text!)
+                note?.modificationDate = dateFormatter.date(from: self.modificationDate.text!)
+                note?.title = self.titleTextField.text
+            }
+            
+            do {
+                try backgroundContext.save()
+            } catch let err {
+                print(err)
+            }
+            
+        }
     }
 }
 
@@ -120,10 +109,12 @@ extension NoteController {
     }
     
     func setupNewImageView(image: UIImage) {
-        let imageView = UIImageView()
+        let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
-        view.addSubview(imageView)
+        imageView.tag = Int(arc4random_uniform(200))
+        count = count + 1
+        bodyText.addSubview(imageView)
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
         topImgConstraint = imageView.topAnchor.constraint(equalTo: bodyText.topAnchor, constant: 20)
@@ -131,16 +122,21 @@ extension NoteController {
         imageView.bottomAnchor.constraint(equalTo: bodyText.bottomAnchor, constant: -20)
         leftImgConstraint = imageView.leftAnchor.constraint(equalTo: bodyText.leftAnchor, constant: 20)
         leftImgConstraint.isActive = true
-        imageView.image = image
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didChoosen))
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didMoved))
         longPressGesture.delegate = self
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(didPinch))
         pinchGesture.delegate = self
         let rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(didRotateImage))
         rotateGesture.delegate = self
+        imageView.addGestureRecognizer(tapGesture)
         imageView.addGestureRecognizer(longPressGesture)
         imageView.addGestureRecognizer(pinchGesture)
         imageView.addGestureRecognizer(rotateGesture)
+    }
+    
+    @objc func didChoosen(tapGesture: UITapGestureRecognizer) {
+        bodyText.bringSubview(toFront: tapGesture.view!)
     }
     
     @objc func didPinch(pinchGesture: UIPinchGestureRecognizer) {
@@ -195,11 +191,13 @@ extension NoteController {
     }
    
     override func viewDidLayoutSubviews() {
-        let images = view.subviews
+        //let images = view.subviews
+        let images = bodyText.subviews
         var paths = [UIBezierPath]()
         images.forEach { (view) in
             if view is UIImageView {
                 let imageView = view as? UIImageView
+                print("IMAGEVIEW TAG->", imageView?.tag)
                 var imgRectangle = view.convert((imageView?.frame)!, to: bodyText)
                 imgRectangle = imgRectangle.insetBy(dx: -15, dy: -15)//Con esto le metemos margen al rectangulo de la imagen
                 paths.append(UIBezierPath(rect: imgRectangle))
@@ -244,7 +242,38 @@ extension NoteController: UIImagePickerControllerDelegate, UINavigationControlle
     
     
 }
-
+// MARK: - DatePicker
+extension NoteController {
+    
+    private func setupDatePicker() {
+        modificationDate.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didDatePickerShowed))
+        modificationDate.addGestureRecognizer(tapGesture)
+        datePicker.isUserInteractionEnabled = true
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(didCloseDatePicker))
+        swipeGesture.direction = .down
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc func didDatePickerShowed() {
+        datePicker.isHidden = false
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy"
+        datePicker.date = dateFormatter.date(from: modificationDate.text!)!
+        datePicker.addTarget(self, action: #selector(didDateChanged), for: UIControlEvents.valueChanged)
+        
+    }
+    
+    @objc func didDateChanged() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy"
+        modificationDate.text = dateFormatter.string(from: datePicker.date)
+    }
+    
+    @objc func didCloseDatePicker() {
+        datePicker.isHidden = true
+    }
+}
 
 extension NoteController {
     @objc func addLocation() {

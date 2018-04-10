@@ -26,7 +26,7 @@ extension NoteListViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = IndentLabel()
-        label.text = sectionsName[section]
+        label.text = self.notebooks[section].name
         label.backgroundColor = UIColor.blueMidNight
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -34,32 +34,12 @@ extension NoteListViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return self.notesArray.count
+        return self.notebooks.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.notesArray[section].count
+        return (self.notebooks[section].notes?.count)!
     }
- 
-    func fetchSections() {
-        var arrayOfNotes = [[Note]]()
-        var names = [String]()
-        let notebooks = DataManager.sharedManager.fetchNotebooks()
-        notebooks.forEach { (notebook) in
-            names.append(notebook.name!)
-            if let notes = notebook.notes {
-               arrayOfNotes.append((notes.allObjects as? [Note])!)
-              
-            }
-        }
-        self.sectionsName = names
-        self.notesArray = arrayOfNotes
-        self.tableView.reloadData()
-    }
-    
-    /*override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
-    }*/
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let moveAction = UITableViewRowAction(style: .default, title: "Move", handler: moveToAnotherNotebook)
@@ -71,17 +51,13 @@ extension NoteListViewController {
     private func moveToAnotherNotebook(action: UITableViewRowAction, indexPath: IndexPath)  {
         print("Moving note to another notebook...")
         let alertController = UIAlertController(title: "Choose Notebook", message: nil, preferredStyle: .actionSheet)
-        
-        let notebooks = DataManager.sharedManager.fetchNotebooks()
-        notebooks.forEach { (notebook) in
+        self.notebooks.forEach { (notebook) in
             alertController.addAction(UIAlertAction(title: notebook.name, style: .default) { (action) in
                 let context = DataManager.sharedManager.persistentContainer.viewContext
-                //let note = self.notes[indexPath.row]
-                let note = self.notesArray[indexPath.section][indexPath.row]
-                note.notebook = notebook
+                let note = self.notebooks[indexPath.section].notes?.allObjects[indexPath.row] as? Note
+                note?.notebook = notebook
                 do {
                     try context.save()
-                    self.fetchSections()
                 } catch let saveErr {
                     print("Failed to edit note:", saveErr)
                 }
@@ -94,18 +70,12 @@ extension NoteListViewController {
     
     private func handleDeleteNote(action: UITableViewRowAction, indexPath: IndexPath) {
         print("Deleting note...")
-        let note = self.notesArray[indexPath.section][indexPath.row]
-        self.notesArray[indexPath.section].remove(at: indexPath.row)
-        //  self.notesArray.remove(at: [indexPath.section][indexPath.row])
-//        let note = self.notes[indexPath.row]
-//        self.notes.remove(at: indexPath.row)
-        self.tableView.deleteRows(at: [indexPath], with: .automatic)
-        
+        let note = self.notebooks[indexPath.section].notes?.allObjects[indexPath.row] as? Note
         //delete from CoreData
         let context = DataManager.sharedManager.persistentContainer.viewContext
-        context.delete(note)
+        context.delete(note!)
         do {
-            try context.save()//Esto hace que se guarde el delete
+            try context.save()
         } catch let saveErr {
             print("Failed to delete note:", saveErr)
         }
@@ -115,10 +85,7 @@ extension NoteListViewController {
         let cellId = "cellId"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId)
             ?? UITableViewCell(style: .default, reuseIdentifier: cellId)
-
-        //let note = notes[indexPath.row]
-        let note = self.notesArray[indexPath.section][indexPath.row]
-        
+        let note = self.notebooks[indexPath.section].notes?.allObjects[indexPath.row] as! Note
         if let name = note.title, let date = note.creationDate {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd MMM, yyyy"
@@ -136,8 +103,7 @@ extension NoteListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let noteDetailVC = NoteController()
-        //noteDetailVC.note = notes[indexPath.row]
-        noteDetailVC.note = self.notesArray[indexPath.section][indexPath.row]
+        noteDetailVC.note = self.notebooks[indexPath.section].notes?.allObjects[indexPath.row] as? Note
         noteDetailVC.delegate = self
         navigationController?.pushViewController(noteDetailVC, animated: true)
     }
