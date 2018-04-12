@@ -15,12 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow()
-        
-        let noteListTVC = NoteTableViewController(style: .plain).wrappedNavigation()
-        let noteDetailVC = NoteDetailViewController().wrappedNavigation()
-        let splitVC = UISplitViewController()
-        splitVC.viewControllers = [noteListTVC, noteDetailVC]
-        //window?.rootViewController = UINavigationController(rootViewController: NoteController())
         window?.rootViewController = UINavigationController(rootViewController:NoteListViewController())
         window?.makeKeyAndVisible()
         return true

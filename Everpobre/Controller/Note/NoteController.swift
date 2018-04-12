@@ -9,7 +9,7 @@
 import UIKit
 
 protocol NoteControllerDelegate {
-    func didEditNote()
+    func didEditNote(note: Note)
 }
 
 class NoteController: UIViewController, UIGestureRecognizerDelegate {
@@ -54,24 +54,30 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc private func handleUpdateNote() {
         print("Updating note...")
-        DataManager.sharedManager.persistentContainer.performBackgroundTask { (backgroundContext) in
-                let note = self.note
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd/MM/yyyy"
-            DispatchQueue.main.async {
-                note?.body = self.bodyText.text
-                note?.creationDate = dateFormatter.date(from: self.creationDate.text!)
-                note?.modificationDate = dateFormatter.date(from: self.modificationDate.text!)
-                note?.title = self.titleTextField.text
+        let context = DataManager.sharedManager.persistentContainer.viewContext
+        let note = self.note
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy"
+        note?.body = self.bodyText.text
+        note?.creationDate = dateFormatter.date(from: self.creationDate.text!)
+        note?.modificationDate = dateFormatter.date(from: self.modificationDate.text!)
+        note?.title = self.titleTextField.text
+        let images = bodyText.subviews
+        images.forEach { (view) in
+            if view is UIImageView {
+                //let imageView = view as? UIImageView
+                //= UIImageJPEGRepresentation(companyImage, 0.8)
             }
-            
-            do {
-                try backgroundContext.save()
-            } catch let err {
-                print(err)
-            }
-            
         }
+        do {
+            try context.save()
+            if let note = note {
+                delegate?.didEditNote(note: note)
+            }
+        } catch let saveErr {
+            print("Failed to edit note:", saveErr)
+        }
+     
     }
 }
 
@@ -83,7 +89,9 @@ extension NoteController: UITextFieldDelegate {
         note?.title = titleTextField.text
         do {
             try context.save()
-            delegate?.didEditNote()
+            if let note = note {
+                delegate?.didEditNote(note: note)
+            }
         } catch let saveErr {
             print("Failed to edit note:", saveErr)
         }
@@ -159,20 +167,13 @@ extension NoteController {
         case .began:
             closeKeyboard()
             relativePoint = longPressGesture.location(in: imageView)
-            UIView.animate(withDuration: 0.2, animations: {
-                //imageView.transform = CGAffineTransform.init(scaleX: 1.2, y: 1.2)
-            })
-            break
         case .changed:
             let location = longPressGesture.location(in: bodyText)
             leftImgConstraint.constant = location.x - relativePoint.x
             topImgConstraint.constant = location.y - relativePoint.y
             break
-        case .ended, .cancelled:
-            UIView.animate(withDuration: 0.2, animations: {
-               // imageView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-            })
-            break
+        case .ended, .cancelled: break
+            
         default:
             break
         }
@@ -190,7 +191,7 @@ extension NoteController {
         return true
     }
    
-    override func viewDidLayoutSubviews() {
+    /*override func viewDidLayoutSubviews() {
         //let images = view.subviews
         let images = bodyText.subviews
         var paths = [UIBezierPath]()
@@ -204,7 +205,7 @@ extension NoteController {
             }
         }
         bodyText.textContainer.exclusionPaths = paths
-    }
+    }*/
     
 }
 

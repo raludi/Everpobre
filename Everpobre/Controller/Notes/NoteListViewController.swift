@@ -20,6 +20,7 @@ class NoteListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupFetchController()
         self.notebooks = fetchedResultController.fetchedObjects!
     }
     
@@ -36,7 +37,7 @@ class NoteListViewController: UITableViewController {
         operationsNotebook.tintColor = UIColor.emerald
         fastAdd.tintColor = UIColor.emerald
         self.setToolbarItems([operationsNotebook, flexible, fastAdd], animated: false)
-        setupFetchController()
+       
     }
     
     private func setupFetchController() {
@@ -55,7 +56,7 @@ class NoteListViewController: UITableViewController {
         let alertController = UIAlertController(title: "Choose Notebook", message: nil, preferredStyle: .actionSheet)
         self.notebooks.forEach { (notebook) in
             alertController.addAction(UIAlertAction(title: notebook.name, style: .default) { (action) in
-                _ = DataManager.sharedManager.createNote(notebook: notebook)
+                let _ = DataManager.sharedManager.createNote(notebook: notebook)
             })
         }
         let cancel = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
@@ -66,6 +67,7 @@ class NoteListViewController: UITableViewController {
     @objc func handleNotebooks() {
         let notebookController = NotebookListVC()
         notebookController.delegate = self
+        notebookController.notebooks = self.notebooks
         navigationController?.pushViewController(notebookController, animated: true)
     }
     
@@ -93,10 +95,10 @@ extension NoteListViewController {
  // MARK: - NoteDetailDelegate
 extension NoteListViewController: NoteControllerDelegate {
     
-    func didEditNote() {
-        //self.fetchSections()
+    func didEditNote(note: Note) {
+        
     }
-
+    
 }
 
 // MARK: - NotebookListDelegate

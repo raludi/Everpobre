@@ -21,9 +21,8 @@ class NotebookListVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationBar()
-        
-        self.notebooks = DataManager.sharedManager.fetchNotebooks()
+        setupNavigationBar()        
+        //self.notebooks = DataManager.sharedManager.fetchNotebooks()
     }
     
     private func setupNavigationBar() {
