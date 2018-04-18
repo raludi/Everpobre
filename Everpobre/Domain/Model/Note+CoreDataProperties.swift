@@ -2,7 +2,7 @@
 //  Note+CoreDataProperties.swift
 //  Everpobre
 //
-//  Created by Rafael Lujan on 1/4/18.
+//  Created by Rafael Lujan on 12/4/18.
 //  Copyright © 2018 Rafael Lujan. All rights reserved.
 //
 //
@@ -17,10 +17,10 @@ extension Note {
         return NSFetchRequest<Note>(entityName: "Note")
     }
 
+    @NSManaged public var title: String?
     @NSManaged public var body: String?
     @NSManaged public var creationDate: Date?
     @NSManaged public var modificationDate: Date?
-    @NSManaged public var title: String?
     @NSManaged public var images: NSSet?
     @NSManaged public var notebook: NoteBook?
 

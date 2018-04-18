@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 protocol NoteControllerDelegate {
     func didEditNote(note: Note)
@@ -27,11 +28,10 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
     var note: Note?
     var delegate: NoteControllerDelegate?
     var count = 0
-    var topImgConstraint: NSLayoutConstraint!
-    var leftImgConstraint: NSLayoutConstraint!
     var relativePoint: CGPoint!
     
     var images = [UIImageView]()
+    var photosToSave = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,8 +45,20 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
         creationDate.text = dateFormatter.string(from: (note?.creationDate)!)
         modificationDate.text = dateFormatter.string(from: (note?.modificationDate)!)
         bodyText.text = note?.body
-        
+        if note?.images != nil {
+        let imagesData = note?.images?.allObjects as? [PhotoContainer]
+            imagesData?.forEach({ (container) in
+                let data = container.image
+                let posX = container.locationX
+                let posY = container.locationY
+                if let data = data {
+                    let image = UIImage(data: data)
+                    setupNewImageView(image: image!, x: posX, y: posY)
+                }
+            })
+        }
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleUpdateNote))
+       // setupNoteImages()
         setupDatePicker()
         setupBottomToolbar()
         
@@ -62,13 +74,30 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
         note?.creationDate = dateFormatter.date(from: self.creationDate.text!)
         note?.modificationDate = dateFormatter.date(from: self.modificationDate.text!)
         note?.title = self.titleTextField.text
-        let images = bodyText.subviews
-        images.forEach { (view) in
+        let container  = bodyText.subviews
+        container.forEach { (view) in
             if view is UIImageView {
-                //let imageView = view as? UIImageView
-                //= UIImageJPEGRepresentation(companyImage, 0.8)
+                let imageView = view as? UIImageView
+                if let imageView = imageView {
+                    if photosToSave.contains("image_\(imageView.tag)") {
+                        let frame = imageView.frame
+                        let image = imageView.image
+                        let imageData = UIImageJPEGRepresentation(image!, 0.8)
+                        if let imageData = imageData {
+                              DataManager.sharedManager.createPhotoContainer(image: imageData, note: note!, x: Float(frame.origin.x), y: Float(frame.origin.y))//TODO
+                        }
+                    }
+                }
             }
         }
+       
+        /*self.photosToSave.forEach { (image) in
+            let imageData = UIImageJPEGRepresentation(image, 0.8)
+            if let imageData = imageData {
+                DataManager.sharedManager.createPhotoContainer(image: imageData, note: note!, x: 0, y: 0)//TODO
+            }
+        }*/
+
         do {
             try context.save()
             if let note = note {
@@ -116,20 +145,27 @@ extension NoteController {
         self.setToolbarItems([photoBarButton, flexible, mapBarButton], animated: false)
     }
     
-    func setupNewImageView(image: UIImage) {
-        let imageView = UIImageView(image: image)
+    func setupNewImageView(image: UIImage, x: Float?, y: Float?) {
+        //let imageView = UIImageView(image: image)
+        if let x = x, let y = y {
+        let frame = CGRect(x: CGFloat(x), y: CGFloat(y), width: 100, height: 150)
+        let imageView = UIImageView(frame: frame)
+        imageView.image = image
+       
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
-        imageView.tag = Int(arc4random_uniform(200))
-        count = count + 1
+        imageView.tag = count
+     
         bodyText.addSubview(imageView)
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        topImgConstraint = imageView.topAnchor.constraint(equalTo: bodyText.topAnchor, constant: 20)
+        let topImgConstraint = imageView.topAnchor.constraint(equalTo: bodyText.topAnchor, constant: CGFloat(y))
         topImgConstraint.isActive = true
+        topImgConstraint.identifier = "topConstraint_image_\(count)"
         imageView.bottomAnchor.constraint(equalTo: bodyText.bottomAnchor, constant: -20)
-        leftImgConstraint = imageView.leftAnchor.constraint(equalTo: bodyText.leftAnchor, constant: 20)
+        let leftImgConstraint = imageView.leftAnchor.constraint(equalTo: bodyText.leftAnchor, constant: CGFloat(x))
         leftImgConstraint.isActive = true
+        leftImgConstraint.identifier = "leftConstraint_image_\(count)"
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didChoosen))
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didMoved))
         longPressGesture.delegate = self
@@ -141,6 +177,7 @@ extension NoteController {
         imageView.addGestureRecognizer(longPressGesture)
         imageView.addGestureRecognizer(pinchGesture)
         imageView.addGestureRecognizer(rotateGesture)
+        }
     }
     
     @objc func didChoosen(tapGesture: UITapGestureRecognizer) {
@@ -163,14 +200,20 @@ extension NoteController {
     
     @objc func didMoved(longPressGesture: UILongPressGestureRecognizer) {
         let imageView =  longPressGesture.view as! UIImageView
+        let topImgConstraint = bodyText.constraints.filter { (constraint) -> Bool in
+            return constraint.identifier == "topConstraint_image_\(imageView.tag)"
+        }.first
+        let leftImgConstraint = bodyText.constraints.filter { (constraint) -> Bool in
+            return constraint.identifier == "leftConstraint_image_\(imageView.tag)"
+        }.first
         switch longPressGesture.state {
         case .began:
             closeKeyboard()
             relativePoint = longPressGesture.location(in: imageView)
         case .changed:
             let location = longPressGesture.location(in: bodyText)
-            leftImgConstraint.constant = location.x - relativePoint.x
-            topImgConstraint.constant = location.y - relativePoint.y
+            leftImgConstraint?.constant = location.x - relativePoint.x
+            topImgConstraint?.constant = location.y - relativePoint.y
             break
         case .ended, .cancelled: break
             
@@ -186,7 +229,7 @@ extension NoteController {
             bodyText.resignFirstResponder()
         }
     }
-       //MARK:- UIGestureRecognizerDelegate Methods
+    //MARK:- UIGestureRecognizerDelegate Methods
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
@@ -237,7 +280,9 @@ extension NoteController: UIImagePickerControllerDelegate, UINavigationControlle
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        setupNewImageView(image: image)
+        count = count + 1
+        photosToSave.append("image_\(count)")
+        setupNewImageView(image: image, x: 20, y: 20)
         picker.dismiss(animated: true, completion: nil)
     }
     
@@ -258,6 +303,7 @@ extension NoteController {
     
     @objc func didDatePickerShowed() {
         datePicker.isHidden = false
+        view.bringSubview(toFront: datePicker)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy"
         datePicker.date = dateFormatter.date(from: modificationDate.text!)!

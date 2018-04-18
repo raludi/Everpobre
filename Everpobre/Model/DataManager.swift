@@ -15,7 +15,7 @@ class DataManager: NSObject {
     
     lazy var persistentContainer: NSPersistentContainer = {
         
-        let container = NSPersistentContainer(name: "EverpobreModel")
+        let container = NSPersistentContainer(name: "EverpobreDataModel")
         container.loadPersistentStores(completionHandler: { (storeDescription,error) in
             
             if let err = error {
@@ -52,17 +52,26 @@ class DataManager: NSObject {
         }
     }
     
-    func createNotebook(name: String) -> NoteBook? {
-        let context = persistentContainer.viewContext
+    func createNotebook(name: String) {
+        DispatchQueue.global(qos: .background).async {
+            let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            privateMOC.parent = self.persistentContainer.viewContext
+            let notebook = NSEntityDescription.insertNewObject(forEntityName: "NoteBook", into: privateMOC) as! NoteBook
+            notebook.name = name
+            notebook.defaultNotebook = false
+            try! privateMOC.save()
+        }
+        /*let context = persistentContainer.viewContext
         let notebook = NSEntityDescription.insertNewObject(forEntityName: "NoteBook", into: context) as! NoteBook
         notebook.name = name
+        notebook.defaultNotebook = false
         do {
             try context.save()
             return notebook
         } catch let err {
             print("Failed to create a new notebook: ", err)
             return nil
-        }
+        }*/
     }
     
     func createNote(notebook: NoteBook) -> (Note?,Error?) {
@@ -85,5 +94,17 @@ class DataManager: NSObject {
             print("Failed to create a new note: ", err)
             return (nil, err)
         }
+    }
+    
+    func createPhotoContainer(image: Data, note: Note, x: Float?, y: Float?) {
+        let context = persistentContainer.viewContext
+        let photo = NSEntityDescription.insertNewObject(forEntityName: "PhotoContainer", into: context) as! PhotoContainer
+        photo.image = image
+        photo.note = note
+        if let positionX = x, let positionY = y {
+            photo.locationX = positionX
+            photo.locationY = positionY
+        }
+        try! context.save()
     }
 }

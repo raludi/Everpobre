@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 protocol NotebookListDelegate {
     func didSetDefaultNotebook(notebook: NoteBook)
@@ -20,7 +21,6 @@ class NotebookListVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupNavigationBar()        
         //self.notebooks = DataManager.sharedManager.fetchNotebooks()
     }
@@ -38,9 +38,20 @@ class NotebookListVC: UITableViewController {
         let alertController = UIAlertController(title: "Add New Notebook", message: nil, preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default) { (alert) in
             if let name = self.nameTextField?.text {
-                _ = DataManager.sharedManager.createNotebook(name: name)
-                self.notebooks = DataManager.sharedManager.fetchNotebooks()
-                self.tableView.reloadData()
+                DispatchQueue.global(qos: .background).async {
+                    let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                    privateMOC.parent = DataManager.sharedManager.persistentContainer.viewContext
+                    let notebook = NSEntityDescription.insertNewObject(forEntityName: "NoteBook", into: privateMOC) as! NoteBook
+                    notebook.name = name
+                    notebook.defaultNotebook = false
+                    try! privateMOC.save()
+                    DispatchQueue.main.async {
+                        self.notebooks = DataManager.sharedManager.fetchNotebooks()
+                        self.tableView.reloadData()
+                    }
+                }
+                //_ = DataManager.sharedManager.createNotebook(name: name)
+                
             }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)

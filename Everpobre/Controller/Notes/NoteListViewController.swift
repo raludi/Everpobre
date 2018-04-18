@@ -22,6 +22,7 @@ class NoteListViewController: UITableViewController {
         super.viewWillAppear(animated)
         setupFetchController()
         self.notebooks = fetchedResultController.fetchedObjects!
+        self.tableView.reloadData()
     }
     
     override func viewDidLoad() {

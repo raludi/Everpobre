@@ -45,18 +45,39 @@ extension NotebookListVC {
     
     private func handleDeleteNotebook(action: UITableViewRowAction, indexPath: IndexPath) {
         print("Deleting notebook...")
-        let notebook = self.notebooks[indexPath.row]
-        self.notebooks.remove(at: indexPath.row)
-        self.tableView.deleteRows(at: [indexPath], with: .automatic)
-        
-        //delete from CoreData
-        let context = DataManager.sharedManager.persistentContainer.viewContext
-        context.delete(notebook)
-        do {
-            try context.save()//Esto hace que se guarde el delete
-        } catch let saveErr {
-            print("Failed to delete note:", saveErr)
+        let messageTitle = "Choose if you want to delete all your notes or move to another notebook"
+        let alertController = UIAlertController(title: messageTitle, message: nil, preferredStyle: .actionSheet)
+        self.notebooks.forEach { (notebook) in
+            if notebooks[indexPath.row].name != notebook.name {
+                alertController.addAction(UIAlertAction(title: notebook.name, style: .default) { (action) in
+                    let context = DataManager.sharedManager.persistentContainer.viewContext
+                    let notes = self.notebooks[indexPath.row].notes?.allObjects as? [Note]
+                    if let notes = notes {
+                        notes.forEach({ (note) in
+                            note.notebook = notebook
+                        })
+                        context.delete(self.notebooks[indexPath.row])
+                        try! context.save()
+                    }
+                    self.notebooks = DataManager.sharedManager.fetchNotebooks()
+                    self.tableView.reloadData()
+                })
+            }
         }
+        alertController.addAction(UIAlertAction(title: "Delete all", style: .destructive, handler: { (action) in
+            let notebook = self.notebooks[indexPath.row]
+            self.notebooks.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            //delete from CoreData
+            let context = DataManager.sharedManager.persistentContainer.viewContext
+            context.delete(notebook)
+            do {
+                try context.save()//Esto hace que se guarde el delete
+            } catch let saveErr {
+                print("Failed to delete note:", saveErr)
+            }
+        }))
+        present(alertController, animated: true, completion: nil)
     }
     
 }
