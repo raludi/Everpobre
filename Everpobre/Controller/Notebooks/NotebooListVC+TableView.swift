@@ -60,6 +60,9 @@ extension NotebookListVC {
                         try! context.save()
                     }
                     self.notebooks = DataManager.sharedManager.fetchNotebooks()
+                    self.notebooks.sort { (nb1, nb2) -> Bool in
+                        return (nb1.name?.lowercased())! < (nb2.name?.lowercased())!
+                    }
                     self.tableView.reloadData()
                 })
             }
@@ -68,15 +71,19 @@ extension NotebookListVC {
             let notebook = self.notebooks[indexPath.row]
             self.notebooks.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            //delete from CoreData
             let context = DataManager.sharedManager.persistentContainer.viewContext
             context.delete(notebook)
             do {
-                try context.save()//Esto hace que se guarde el delete
+                try context.save()
             } catch let saveErr {
                 print("Failed to delete note:", saveErr)
             }
         }))
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
         present(alertController, animated: true, completion: nil)
     }
     

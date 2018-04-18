@@ -14,14 +14,17 @@ class NoteListViewController: UITableViewController {
     var fetchedResultController: NSFetchedResultsController<NoteBook>!
     
     var notebooks = [NoteBook]()
-    //var notesArray = [[Note]]()
-    //var sectionsName = [String]()
     var defaultNotebook: NoteBook?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupFetchController()
         self.notebooks = fetchedResultController.fetchedObjects!
+        if let defaultNotebook = self.defaultNotebook {
+            let index = self.notebooks.index(of: defaultNotebook)
+            self.notebooks.remove(at: index!)
+            self.notebooks.insert(defaultNotebook, at: self.notebooks.startIndex)
+        }
         self.tableView.reloadData()
     }
     
@@ -52,7 +55,7 @@ class NoteListViewController: UITableViewController {
         try! fetchedResultController.performFetch()
     }
     
-    @objc func handleAddNote() {
+    @objc func handleAddNote(_ sender: UIBarButtonItem) {
         print("Added new note...")
         let alertController = UIAlertController(title: "Choose Notebook", message: nil, preferredStyle: .actionSheet)
         self.notebooks.forEach { (notebook) in
@@ -62,6 +65,11 @@ class NoteListViewController: UITableViewController {
         }
         let cancel = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         alertController.addAction(cancel)
+        if let popoverController = alertController.popoverPresentationController {//popover es el modal pero para ipad
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
         present(alertController, animated: true, completion: nil)
     }
     
@@ -97,7 +105,7 @@ extension NoteListViewController {
 extension NoteListViewController: NoteControllerDelegate {
     
     func didEditNote(note: Note) {
-        
+        self.tableView.reloadData()
     }
     
 }
@@ -116,6 +124,11 @@ extension NoteListViewController: NSFetchedResultsControllerDelegate {
         let notebooks = controller.fetchedObjects as! [NoteBook]?
         if let notebooks = notebooks {
             self.notebooks = notebooks
+            if let defaultNotebook = self.defaultNotebook {
+                let index = self.notebooks.index(of: defaultNotebook)
+                self.notebooks.remove(at: index!)
+                self.notebooks.insert(defaultNotebook, at: self.notebooks.startIndex)
+            }
         }
         self.tableView.reloadData()
     }

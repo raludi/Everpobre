@@ -26,7 +26,9 @@ extension NoteListViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = IndentLabel()
-        label.text = self.notebooks[section].name
+        if let name = self.notebooks[section].name {
+            label.text = "Notebook: \(name)"
+        }
         label.backgroundColor = UIColor.blueMidNight
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -65,6 +67,12 @@ extension NoteListViewController {
         }
         let cancel = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         alertController.addAction(cancel)
+        if let popoverController = alertController.popoverPresentationController {//popover es el modal pero para ipad
+            //popoverController.barButtonItem = sender -> Aqui hacemos que salga encima del botón pero en nuestro caso lo queremos en el centro:
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
         present(alertController, animated: true, completion: nil)
     }
     
@@ -105,7 +113,12 @@ extension NoteListViewController {
         let noteDetailVC = NoteController()
         noteDetailVC.note = self.notebooks[indexPath.section].notes?.allObjects[indexPath.row] as? Note
         noteDetailVC.delegate = self
-        navigationController?.pushViewController(noteDetailVC, animated: true)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            splitViewController?.showDetailViewController(noteDetailVC.wrappedNavigation(), sender: nil)
+        } else {
+            navigationController?.pushViewController(noteDetailVC, animated: true)
+        }
+        
     }
     
 }

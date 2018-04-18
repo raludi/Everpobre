@@ -21,8 +21,10 @@ class NotebookListVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()        
-        //self.notebooks = DataManager.sharedManager.fetchNotebooks()
+        setupNavigationBar()
+        self.notebooks.sort { (nb1, nb2) -> Bool in
+            return (nb1.name?.lowercased())! < (nb2.name?.lowercased())!
+        }
     }
     
     private func setupNavigationBar() {
@@ -47,11 +49,12 @@ class NotebookListVC: UITableViewController {
                     try! privateMOC.save()
                     DispatchQueue.main.async {
                         self.notebooks = DataManager.sharedManager.fetchNotebooks()
+                        self.notebooks.sort { (nb1, nb2) -> Bool in
+                                return (nb1.name?.lowercased())! < (nb2.name?.lowercased())!
+                        }
                         self.tableView.reloadData()
                     }
                 }
-                //_ = DataManager.sharedManager.createNotebook(name: name)
-                
             }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
@@ -61,6 +64,7 @@ class NotebookListVC: UITableViewController {
         }
         alertController.addAction(saveAction)
         alertController.addAction(cancelAction)
+        
         self.present(alertController, animated: true)
     }
 }

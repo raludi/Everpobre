@@ -15,7 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow()
-        window?.rootViewController = UINavigationController(rootViewController:NoteListViewController())
+        let noteVC = NoteListViewController()
+        let emptyVC = UIViewController()
+        emptyVC.view.backgroundColor = .white
+        let splitVC = UISplitViewController()
+        splitVC.delegate = self
+        splitVC.viewControllers = [noteVC.wrappedNavigation(), emptyVC]
+        //window?.rootViewController = UINavigationController(rootViewController:NoteListViewController())
+        window?.rootViewController = splitVC
         window?.makeKeyAndVisible()
         return true
     }
@@ -27,3 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {}
 }
 
+extension AppDelegate: UISplitViewControllerDelegate {
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
+        return true
+    }
+}

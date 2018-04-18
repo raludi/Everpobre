@@ -58,7 +58,6 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
             })
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleUpdateNote))
-       // setupNoteImages()
         setupDatePicker()
         setupBottomToolbar()
         
@@ -90,13 +89,6 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
-       
-        /*self.photosToSave.forEach { (image) in
-            let imageData = UIImageJPEGRepresentation(image, 0.8)
-            if let imageData = imageData {
-                DataManager.sharedManager.createPhotoContainer(image: imageData, note: note!, x: 0, y: 0)//TODO
-            }
-        }*/
 
         do {
             try context.save()
@@ -132,6 +124,9 @@ extension NoteController {
     private func setupNavigationBar() {
         navigationItem.title = "Note Detail"
         navigationController?.navigationBar.tintColor = UIColor.blueMidNight
+        navigationController?.navigationBar.barTintColor = UIColor.emerald
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.blueMidNight, NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 24)]
     }
     
     func setupBottomToolbar()  {
@@ -233,23 +228,6 @@ extension NoteController {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-   
-    /*override func viewDidLayoutSubviews() {
-        //let images = view.subviews
-        let images = bodyText.subviews
-        var paths = [UIBezierPath]()
-        images.forEach { (view) in
-            if view is UIImageView {
-                let imageView = view as? UIImageView
-                print("IMAGEVIEW TAG->", imageView?.tag)
-                var imgRectangle = view.convert((imageView?.frame)!, to: bodyText)
-                imgRectangle = imgRectangle.insetBy(dx: -15, dy: -15)//Con esto le metemos margen al rectangulo de la imagen
-                paths.append(UIBezierPath(rect: imgRectangle))
-            }
-        }
-        bodyText.textContainer.exclusionPaths = paths
-    }*/
-    
 }
 
 extension NoteController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -275,6 +253,12 @@ extension NoteController: UIImagePickerControllerDelegate, UINavigationControlle
         actionSheetAlert.addAction(useCamera)
         actionSheetAlert.addAction(usePhotoLibrary)
         actionSheetAlert.addAction(cancel)
+        if let popoverController = actionSheetAlert.popoverPresentationController {//popover es el modal pero para ipad
+            //popoverController.barButtonItem = sender -> Aqui hacemos que salga encima del botón pero en nuestro caso lo queremos en el centro:
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
         present(actionSheetAlert, animated: true, completion: nil)
     }
     
@@ -326,6 +310,10 @@ extension NoteController {
     @objc func addLocation() {
         print("Add location...")
         let mapController = MapViewController()
-        present(mapController.wrappedNavigation(), animated: true, completion: nil)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            splitViewController?.present(mapController.wrappedNavigation(), animated: true, completion: nil)
+        } else {
+            present(mapController.wrappedNavigation(), animated: true, completion: nil)
+        }
     }
 }
