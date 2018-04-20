@@ -2,7 +2,7 @@
 //  PhotoContainer+CoreDataProperties.swift
 //  Everpobre
 //
-//  Created by Rafael Lujan on 12/4/18.
+//  Created by Rafael Lujan on 20/04/2018.
 //  Copyright © 2018 Rafael Lujan. All rights reserved.
 //
 //

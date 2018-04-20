@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-
 protocol NoteControllerDelegate {
     func didEditNote(note: Note)
 }
@@ -306,14 +305,34 @@ extension NoteController {
     }
 }
 
-extension NoteController {
+extension NoteController: MapControllerDelegate {
+    
+    func didLocation(location: LocationNote) {
+        let context = DataManager.sharedManager.persistentContainer.viewContext
+        let note = self.note
+        note?.longitude = location.longitude!
+        note?.latitude = location.latitude!
+        try! context.save()
+        
+    }
+  
     @objc func addLocation() {
         print("Add location...")
         let mapController = MapViewController()
+        mapController.delegate = self
+        if let lat = note?.latitude, let long = note?.longitude {
+            mapController.noteLocation = (lat,long)
+        } else {
+            mapController.noteLocation = nil
+        }
         if UIDevice.current.userInterfaceIdiom == .pad {
             splitViewController?.present(mapController.wrappedNavigation(), animated: true, completion: nil)
         } else {
             present(mapController.wrappedNavigation(), animated: true, completion: nil)
         }
     }
+    
+    
 }
+
+

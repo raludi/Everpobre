@@ -10,28 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Everpobre/Model/DataManager.swift"
-            timestampString = "545309561.204522"
+            timestampString = "545939467.015255"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Everpobre/Controller/Notes/NoteListViewController.swift"
-            timestampString = "545769681.831847"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "controllerDidChangeContent(_:)"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "fetchNotebooks()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Everpobre/Controller/Note/NoteController.swift"
-            timestampString = "545769681.831989"
+            timestampString = "545939467.01534"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "setupNewImageView(image:x:y:)"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "didRotateImage(rotationGesture:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -58,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Everpobre/Controller/Notes/NoteListViewController.swift"
-            timestampString = "545769681.832072"
+            timestampString = "545777482.2363679"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "22"
@@ -74,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Everpobre/Controller/Note/NoteController.swift"
-            timestampString = "545769681.832137"
+            timestampString = "545939467.015435"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "314"
-            endingLineNumber = "314"
+            startingLineNumber = "323"
+            endingLineNumber = "323"
             landmarkName = "addLocation()"
             landmarkType = "7">
          </BreakpointContent>
@@ -86,16 +70,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Everpobre/Controller/Notes/NoteListViewController.swift"
-            timestampString = "545769681.832193"
+            filePath = "Everpobre/Controller/Note/NoteController.swift"
+            timestampString = "545939467.015543"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "controllerDidChangeContent(_:)"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
+            landmarkName = "didLocation(location:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import MapKit
 
 class DataManager: NSObject {
     
@@ -86,7 +87,8 @@ class DataManager: NSObject {
         note.creationDate = Date()
         note.modificationDate = Date()
         note.notebook = notebook
-        
+        note.latitude = 40.413273
+        note.longitude = -3.673718
         do {
             try context.save()
             return (note, nil)
@@ -108,3 +110,4 @@ class DataManager: NSObject {
         try! context.save()
     }
 }
+
