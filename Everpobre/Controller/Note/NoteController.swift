@@ -59,9 +59,14 @@ class NoteController: UIViewController, UIGestureRecognizerDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleUpdateNote))
         setupDatePicker()
         setupBottomToolbar()
-        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
     }
 
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
     @objc private func handleUpdateNote() {
         print("Updating note...")
         let context = DataManager.sharedManager.persistentContainer.viewContext
@@ -107,6 +112,7 @@ extension NoteController: UITextFieldDelegate {
          print("Title Edited")
         let context = DataManager.sharedManager.persistentContainer.viewContext
         note?.title = titleTextField.text
+        closeKeyboard()
         do {
             try context.save()
             if let note = note {
@@ -312,8 +318,11 @@ extension NoteController: MapControllerDelegate {
         let note = self.note
         note?.longitude = location.longitude!
         note?.latitude = location.latitude!
-        try! context.save()
-        
+        do {
+            try context.save()
+        } catch let err {
+            print("Failed to update location -> ", err)
+        }
     }
   
     @objc func addLocation() {

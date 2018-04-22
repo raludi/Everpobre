@@ -18,6 +18,7 @@ class NotebookListVC: UITableViewController {
     var delegate: NotebookListDelegate?
     var notebooks = [NoteBook]()
     var nameTextField: UITextField?
+    var defaultNotebook: NoteBook?
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -11,17 +11,13 @@
 		05042437206BBD7700BDF281 /* NoteController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05042435206BBD7700BDF281 /* NoteController.xib */; };
 		0505422C2070DA4800542646 /* NoteList+TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0505422B2070DA4800542646 /* NoteList+TableView.swift */; };
 		053EA04D205720A400A9D6DB /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053EA04C205720A400A9D6DB /* DataManager.swift */; };
-		053EA04F20572F3500A9D6DB /* NoteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053EA04E20572F3500A9D6DB /* NoteTableViewController.swift */; };
 		0557B7A3205D2B78001CD3D7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0557B7A2205D2B78001CD3D7 /* Extensions.swift */; };
-		0557B7A5205D2CFF001CD3D7 /* NoteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0557B7A4205D2CFF001CD3D7 /* NoteDetailViewController.swift */; };
 		056C49CB2077C9FF0044F311 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056C49C92077C9FF0044F311 /* MapViewController.swift */; };
 		056C49CC2077C9FF0044F311 /* MapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056C49CA2077C9FF0044F311 /* MapViewController.xib */; };
 		0584DCB3205871E400338503 /* ManagedObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0584DCB2205871E400338503 /* ManagedObjects.swift */; };
 		05A1B33E2051CEA700AA1AB1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A1B33D2051CEA700AA1AB1 /* AppDelegate.swift */; };
 		05A1B3452051CEA700AA1AB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05A1B3442051CEA700AA1AB1 /* Assets.xcassets */; };
 		05A1B3502051CF2A00AA1AB1 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05A1B34F2051CF2A00AA1AB1 /* Launch Screen.storyboard */; };
-		05A1B3532051CF8F00AA1AB1 /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A1B3512051CF8F00AA1AB1 /* NoteViewController.swift */; };
-		05A1B3542051CF8F00AA1AB1 /* NoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05A1B3522051CF8F00AA1AB1 /* NoteViewController.xib */; };
 		05CBAB1A2062FE6000317A84 /* NoteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CBAB192062FE6000317A84 /* NoteListViewController.swift */; };
 		05CBAB1C206309CC00317A84 /* UIColor+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CBAB1B206309CC00317A84 /* UIColor+extensions.swift */; };
 		05DBD2F3207F660D00E76476 /* EverpobreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 05DBD2F1207F660D00E76476 /* EverpobreDataModel.xcdatamodeld */; };
@@ -33,7 +29,6 @@
 		05DBD2FF207F66F500E76476 /* PhotoContainer+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DBD2F9207F66F500E76476 /* PhotoContainer+CoreDataProperties.swift */; };
 		05F174222070F35900D4DFFA /* NotebookListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F174212070F35900D4DFFA /* NotebookListVC.swift */; };
 		05F174242070F44100D4DFFA /* NotebooListVC+TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F174232070F44100D4DFFA /* NotebooListVC+TableView.swift */; };
-		05F3CCE62055DF6B000BDE06 /* NoteViewByCodeGestures2Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F3CCE52055DF6B000BDE06 /* NoteViewByCodeGestures2Controller.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,9 +36,7 @@
 		05042435206BBD7700BDF281 /* NoteController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoteController.xib; sourceTree = "<group>"; };
 		0505422B2070DA4800542646 /* NoteList+TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteList+TableView.swift"; sourceTree = "<group>"; };
 		053EA04C205720A400A9D6DB /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		053EA04E20572F3500A9D6DB /* NoteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTableViewController.swift; sourceTree = "<group>"; };
 		0557B7A2205D2B78001CD3D7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		0557B7A4205D2CFF001CD3D7 /* NoteDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailViewController.swift; sourceTree = "<group>"; };
 		056C49C92077C9FF0044F311 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		056C49CA2077C9FF0044F311 /* MapViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapViewController.xib; sourceTree = "<group>"; };
 		0584DCB2205871E400338503 /* ManagedObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjects.swift; sourceTree = "<group>"; };
@@ -52,8 +45,6 @@
 		05A1B3442051CEA700AA1AB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		05A1B3492051CEA700AA1AB1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05A1B34F2051CF2A00AA1AB1 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		05A1B3512051CF8F00AA1AB1 /* NoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteViewController.swift; sourceTree = "<group>"; };
-		05A1B3522051CF8F00AA1AB1 /* NoteViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoteViewController.xib; sourceTree = "<group>"; };
 		05CBAB192062FE6000317A84 /* NoteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListViewController.swift; sourceTree = "<group>"; };
 		05CBAB1B206309CC00317A84 /* UIColor+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extensions.swift"; sourceTree = "<group>"; };
 		05DBD2F2207F660D00E76476 /* EverpobreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EverpobreDataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -65,7 +56,6 @@
 		05DBD2F9207F66F500E76476 /* PhotoContainer+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoContainer+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		05F174212070F35900D4DFFA /* NotebookListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookListVC.swift; sourceTree = "<group>"; };
 		05F174232070F44100D4DFFA /* NotebooListVC+TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotebooListVC+TableView.swift"; sourceTree = "<group>"; };
-		05F3CCE52055DF6B000BDE06 /* NoteViewByCodeGestures2Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteViewByCodeGestures2Controller.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,11 +143,6 @@
 				05A1B3442051CEA700AA1AB1 /* Assets.xcassets */,
 				05A1B3492051CEA700AA1AB1 /* Info.plist */,
 				05A1B34F2051CF2A00AA1AB1 /* Launch Screen.storyboard */,
-				05A1B3512051CF8F00AA1AB1 /* NoteViewController.swift */,
-				05A1B3522051CF8F00AA1AB1 /* NoteViewController.xib */,
-				05F3CCE52055DF6B000BDE06 /* NoteViewByCodeGestures2Controller.swift */,
-				053EA04E20572F3500A9D6DB /* NoteTableViewController.swift */,
-				0557B7A4205D2CFF001CD3D7 /* NoteDetailViewController.swift */,
 			);
 			path = Everpobre;
 			sourceTree = "<group>";
@@ -263,7 +248,6 @@
 			files = (
 				05A1B3502051CF2A00AA1AB1 /* Launch Screen.storyboard in Resources */,
 				05042437206BBD7700BDF281 /* NoteController.xib in Resources */,
-				05A1B3542051CF8F00AA1AB1 /* NoteViewController.xib in Resources */,
 				056C49CC2077C9FF0044F311 /* MapViewController.xib in Resources */,
 				05A1B3452051CEA700AA1AB1 /* Assets.xcassets in Resources */,
 			);
@@ -281,15 +265,11 @@
 				0505422C2070DA4800542646 /* NoteList+TableView.swift in Sources */,
 				05042436206BBD7700BDF281 /* NoteController.swift in Sources */,
 				053EA04D205720A400A9D6DB /* DataManager.swift in Sources */,
-				053EA04F20572F3500A9D6DB /* NoteTableViewController.swift in Sources */,
 				05DBD2FE207F66F500E76476 /* PhotoContainer+CoreDataClass.swift in Sources */,
 				05CBAB1C206309CC00317A84 /* UIColor+extensions.swift in Sources */,
-				05F3CCE62055DF6B000BDE06 /* NoteViewByCodeGestures2Controller.swift in Sources */,
 				056C49CB2077C9FF0044F311 /* MapViewController.swift in Sources */,
 				05DBD2FD207F66F500E76476 /* Note+CoreDataProperties.swift in Sources */,
-				0557B7A5205D2CFF001CD3D7 /* NoteDetailViewController.swift in Sources */,
 				05DBD2FF207F66F500E76476 /* PhotoContainer+CoreDataProperties.swift in Sources */,
-				05A1B3532051CF8F00AA1AB1 /* NoteViewController.swift in Sources */,
 				05F174242070F44100D4DFFA /* NotebooListVC+TableView.swift in Sources */,
 				05DBD2FB207F66F500E76476 /* NoteBook+CoreDataProperties.swift in Sources */,
 				05A1B33E2051CEA700AA1AB1 /* AppDelegate.swift in Sources */,

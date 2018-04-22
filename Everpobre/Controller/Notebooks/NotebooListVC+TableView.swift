@@ -31,16 +31,20 @@ extension NotebookListVC {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+
         let defaultAction = UITableViewRowAction(style: .default, title: "Default Notebook", handler: setDefaultNotebook)
         defaultAction.backgroundColor = UIColor.blueMidNight
         let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete", handler: handleDeleteNotebook)
+        if self.defaultNotebook != self.notebooks[indexPath.row] {
         return [deleteAction,defaultAction]
+        } else { return [defaultAction] }
     }
     
     private func setDefaultNotebook(action: UITableViewRowAction, indexPath: IndexPath) {
         print("Setting notebook as default...")
         let notebook = self.notebooks[indexPath.row]
-        delegate?.didSetDefaultNotebook(notebook: notebook)
+        self.defaultNotebook = notebook
+        delegate?.didSetDefaultNotebook(notebook: self.defaultNotebook!)
     }
     
     private func handleDeleteNotebook(action: UITableViewRowAction, indexPath: IndexPath) {

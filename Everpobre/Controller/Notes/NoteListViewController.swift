@@ -126,8 +126,10 @@ extension NoteListViewController: NSFetchedResultsControllerDelegate {
             self.notebooks = notebooks
             if let defaultNotebook = self.defaultNotebook {
                 let index = self.notebooks.index(of: defaultNotebook)
-                self.notebooks.remove(at: index!)
-                self.notebooks.insert(defaultNotebook, at: self.notebooks.startIndex)
+                if let index = index {
+                    self.notebooks.remove(at: index)
+                    self.notebooks.insert(defaultNotebook, at: self.notebooks.startIndex)
+                }
             }
         }
         self.tableView.reloadData()
